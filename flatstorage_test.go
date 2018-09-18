@@ -18,6 +18,34 @@ func ExampleNewFlatStorage() {
 	// Output: false
 }
 
+func ExampleRead() {
+	fs, err := NewFlatStorage("/var/db")
+	if err != nil {
+		panic(err)
+	}
+
+	type Test struct {
+		Name string
+	}
+
+	// File: /var/db/test/test.json
+	//
+	//	{
+	//		"name": "Hello World"
+	//  }
+	//
+
+	test := Test{}
+	fs.Read("test", "test", &test)
+
+	if err != nil {
+		panic(err)
+	}
+
+	print(test.Name)
+	// Output: Hello World
+}
+
 func TestFlatStorage_resourcePath(t *testing.T) {
 	type fields struct {
 		mutex   *sync.Mutex
