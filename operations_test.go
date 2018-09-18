@@ -301,3 +301,57 @@ func ExampleFlatStorage_write() {
 		panic(err)
 	}
 }
+
+func ExampleFlatStorage_delete() {
+	fs, err := NewFlatStorage("/var/db")
+	if err != nil {
+		panic(err)
+	}
+
+	fs.Delete("test", "test")
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExampleFlatStorage_delete_all() {
+	fs, err := NewFlatStorage("/var/db")
+	if err != nil {
+		panic(err)
+	}
+
+	fs.DeleteAll("test")
+
+	if err != nil {
+		panic(err)
+	}
+}
+
+func ExampleFlatStorage_read_all() {
+	fs, err := NewFlatStorage("/var/db")
+	if err != nil {
+		panic(err)
+	}
+
+	type Test struct {
+		Name string
+	}
+
+	// File: /var/db/test/test.json
+	//
+	//	{
+	//		"name": "Hello World"
+	//  }
+	//
+
+	test := Test{}
+	resources, err := fs.ReadAll("test", &test)
+
+	if err != nil {
+		panic(err)
+	}
+
+	print(resources[0])
+	// Output: { Name: "Hello World" }
+}
