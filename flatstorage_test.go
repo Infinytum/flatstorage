@@ -18,7 +18,7 @@ func ExampleNewFlatStorage() {
 	// Output: false
 }
 
-func ExampleRead() {
+func ExampleFlatStorage_read() {
 	fs, err := NewFlatStorage("/var/db")
 	if err != nil {
 		panic(err)
