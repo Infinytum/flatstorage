@@ -315,7 +315,7 @@ func ExampleFlatStorage_delete() {
 	}
 }
 
-func ExampleFlatStorage_deleteAll() {
+func ExampleFlatStorage_deleteall() {
 	fs, err := NewFlatStorage("/var/db")
 	if err != nil {
 		panic(err)
@@ -328,7 +328,7 @@ func ExampleFlatStorage_deleteAll() {
 	}
 }
 
-func ExampleFlatStorage_readAll() {
+func ExampleFlatStorage_readall() {
 	fs, err := NewFlatStorage("/var/db")
 	if err != nil {
 		panic(err)
