@@ -280,3 +280,24 @@ func ExampleFlatStorage_read() {
 	print(test.Name)
 	// Output: Hello World
 }
+
+func ExampleFlatStorage_write() {
+	fs, err := NewFlatStorage("/var/db")
+	if err != nil {
+		panic(err)
+	}
+
+	type Test struct {
+		Name string
+	}
+
+	test := Test{
+		Name: "Hello World",
+	}
+
+	fs.Write("test", "test", &test)
+
+	if err != nil {
+		panic(err)
+	}
+}
