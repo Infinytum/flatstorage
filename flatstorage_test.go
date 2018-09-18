@@ -72,3 +72,45 @@ func TestFlatStorage_resourcePath(t *testing.T) {
 		})
 	}
 }
+
+func TestFlatStorage_collectionPath(t *testing.T) {
+	type fields struct {
+		mutex   *sync.Mutex
+		mutexes map[string]*sync.Mutex
+		path    string
+		logger  *logrus.Logger
+	}
+	type args struct {
+		collection string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   string
+	}{
+		{
+			name: "Test collection path generating #1",
+			fields: fields{
+				path: "/tmp",
+			},
+			args: args{
+				collection: "test",
+			},
+			want: "/tmp/test",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := &FlatStorage{
+				mutex:   tt.fields.mutex,
+				mutexes: tt.fields.mutexes,
+				path:    tt.fields.path,
+				logger:  tt.fields.logger,
+			}
+			if got := fs.collectionPath(tt.args.collection); got != tt.want {
+				t.Errorf("FlatStorage.collectionPath() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
