@@ -22,13 +22,18 @@ type FlatStorage struct {
 	logger *logrus.Logger
 }
 
-// resourceExists checks if a collection is existent.
-func (fs *FlatStorage) databaseExists(collection string) bool {
-	return pathExists(fs.path)
+func (fs *FlatStorage) resourcePath(collection string, resource string) string {
+	return filepath.Clean(fs.collectionPath(collection), resource)
+}
+
+func (fs *FlatStorage) collectionPath(collection string) string {
+	return filepath.Clean(fs.path, collection)
 }
 
 // NewFlatStorage opens a flatstorage at specified path
 func NewFlatStorage(path string) (*FlatStorage, error) {
+
+	// ToDo: Create DB on init
 	return &FlatStorage{
 		path:    filepath.Clean(path),
 		mutex:   &sync.Mutex{},

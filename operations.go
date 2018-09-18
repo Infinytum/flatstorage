@@ -2,13 +2,19 @@ package flatstorage
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
+
+	"github.com/sirupsen/logrus"
 )
 
 // Delete removes a single resource from a collection
 func (fs *FlatStorage) Delete(collection string, resource string) error {
 	if fs.Exists(collection, resource) {
-		return fmt.Errorf("Not implemented")
+		defer fs.UnlockCollection(collection)
+		fs.LockCollection(collection)
+		logrus.WithField("collection", collection).WithField("resource", resource).Debug("Removing resource from collection")
+		return os.Remove(fs.resourcePath(collection, resource))
 	}
 	return nil
 }
@@ -16,7 +22,10 @@ func (fs *FlatStorage) Delete(collection string, resource string) error {
 // DeleteAll removes an entire collection from the filesystem
 func (fs *FlatStorage) DeleteAll(collection string) error {
 	if fs.CollectionExists(collection) {
-		return fmt.Errorf("Not implemented")
+		defer fs.UnlockCollection(collection)
+		fs.LockCollection(collection)
+		logrus.WithField("collection", collection).Debug("Deleting entire collection")
+		return os.RemoveAll(fs.collectionPath(collection))
 	}
 	return nil
 }
@@ -34,10 +43,12 @@ func (fs *FlatStorage) CollectionExists(collection string) bool {
 // Read reads a single resource from a collection into an interface instance
 func (fs *FlatStorage) Read(collection string, resource string, out interface{}) error {
 	if !fs.CollectionExists(collection) {
+		logrus.WithField("collection", collection).Debug("Tried to read resource from non-existent collection")
 		return collectionNotExistent(collection)
 	}
 
 	if !fs.Exists(collection, resource) {
+		logrus.WithField("collection", collection).WithField("resource", resource).Debug("Tried to read resource from non-existent collection")
 		return resourceNotExistent(collection, resource)
 	}
 
