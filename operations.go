@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -34,12 +36,12 @@ func (fs *FlatStorage) DeleteAll(collection string) error {
 
 // Exists checks if a resource is present in a collection
 func (fs *FlatStorage) Exists(collection string, resource string) bool {
-	return pathExists(filepath.Join(fs.path, collection, resource))
+	return pathExists(fs.resourcePath(collection, resource))
 }
 
 // CollectionExists checks if a collection exists
 func (fs *FlatStorage) CollectionExists(collection string) bool {
-	return pathExists(filepath.Join(fs.path, collection))
+	return pathExists(fs.collectionPath(collection))
 }
 
 // Read reads a single resource from a collection into an interface instance
@@ -54,16 +56,40 @@ func (fs *FlatStorage) Read(collection string, resource string, out interface{})
 		return resourceNotExistent(collection, resource)
 	}
 
-	return fmt.Errorf("Not implemented")
+	bytes, err := ioutil.ReadFile(fs.resourcePath(collection, resource))
+	if err != nil {
+		logrus.WithField("collection", collection).WithField("resource", resource).Error("Error while trying to read resource", err)
+		return err
+	}
+
+	err = json.Unmarshal(bytes, &out)
+	if err != nil {
+		logrus.WithField("collection", collection).WithField("resource", resource).Error("Error while trying to unmarshal resource", err)
+	}
+	return err
 }
 
 // ReadAll reads all resources from a collection into an interface array of resourceType
 func (fs *FlatStorage) ReadAll(collection string, resourceType interface{}) ([]interface{}, error) {
+	resourceList := make([]interface{}, 0)
 	if !fs.CollectionExists(collection) {
-		return make([]interface{}, 0), collectionNotExistent(collection)
+		return resourceList, collectionNotExistent(collection)
 	}
 
-	return nil, fmt.Errorf("Not implemented")
+	resources, err := ioutil.ReadDir(fs.collectionPath(collection))
+	if err != nil {
+		logrus.WithField("collection", collection).Error("Error while trying to list resources", err)
+		return resourceList, err
+	}
+
+	for _, resourceFile := range resources {
+		var clone = reflect.New(reflect.ValueOf(resourceType).Elem().Type()).Interface()
+		name := strings.TrimSuffix(resourceFile.Name(), filepath.Ext(resourceFile.Name()))
+		fs.Read(collection, name, &clone)
+		resourceList = append(resourceList, clone)
+	}
+
+	return resourceList, fmt.Errorf("Not implemented")
 }
 
 // Write writes a single object into a collection from an interface instance
