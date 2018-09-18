@@ -1,7 +1,9 @@
 package flatstorage
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 
@@ -66,5 +68,43 @@ func (fs *FlatStorage) ReadAll(collection string, resourceType interface{}) ([]i
 
 // Write writes a single object into a collection from an interface instance
 func (fs *FlatStorage) Write(collection string, resource string, object interface{}) error {
-	return fmt.Errorf("Not implemented")
+
+	if collection == "" {
+		logrus.Warn("Tried to save resource without collection identifier")
+		return fmt.Errorf("No collection specified for writing resource")
+	}
+
+	if resource == "" {
+		logrus.Warn("Tried to save resource without resource identifier")
+		return fmt.Errorf("No resource specified for writing resource")
+	}
+
+	defer fs.UnlockCollection(collection)
+	fs.LockCollection(collection)
+
+	resPath := fs.resourcePath(collection, resource)
+	resTempPath := resPath + ".fstemp"
+
+	if !fs.CollectionExists(collection) {
+		err := os.MkdirAll(fs.collectionPath(collection), 0755)
+		if err != nil {
+			logrus.WithField("collection", collection).Error("Could not create collection directory", err)
+			return err
+		}
+	}
+
+	// Outputs pretty, tab-indented json files
+	bytes, err := json.MarshalIndent(object, "", "\t")
+	if err != nil {
+		logrus.WithField("collection", collection).WithField("resource", resource).Error("Error while marshaling resource", err)
+		return err
+	}
+
+	if err := ioutil.WriteFile(resTempPath, bytes, 0644); err != nil {
+		logrus.WithField("collection", collection).WithField("resource", resource).Error("Error while writing resource to disk", err)
+		return err
+	}
+
+	// Ensure we dont write in the middle of a read access to the file
+	return os.Rename(resTempPath, resPath)
 }
