@@ -47,7 +47,7 @@ func (fs *FlatStorage) Read(collection string, resource string, out interface{})
 // ReadAll reads all resources from a collection into an interface array of resourceType
 func (fs *FlatStorage) ReadAll(collection string, resourceType interface{}) ([]interface{}, error) {
 	if !fs.CollectionExists(collection) {
-		return nil, collectionNotExistent(collection)
+		return make([]interface{}, 0), collectionNotExistent(collection)
 	}
 
 	return nil, fmt.Errorf("Not implemented")
