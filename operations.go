@@ -2,6 +2,7 @@ package flatstorage
 
 import (
 	"fmt"
+	"path/filepath"
 )
 
 // Delete removes a single resource from a collection
@@ -16,12 +17,12 @@ func (fs *FlatStorage) DeleteAll(collection string) error {
 
 // Exists checks if a resource is present in a collection
 func (fs *FlatStorage) Exists(collection string, resource string) bool {
-	return fs.resourceExists(collection, resource)
+	return pathExists(filepath.Join(fs.path, collection, resource))
 }
 
 // CollectionExists checks if a collection exists
 func (fs *FlatStorage) CollectionExists(collection string) bool {
-	return false
+	return pathExists(filepath.Join(fs.path, collection))
 }
 
 // Read reads a single resource from a collection into an interface instance
