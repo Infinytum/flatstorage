@@ -3,6 +3,8 @@ package flatstorage
 import (
 	"path/filepath"
 	"sync"
+
+	"github.com/sirupsen/logrus"
 )
 
 // FlatStorage is the interface to manage a flatstorage
@@ -17,7 +19,7 @@ type FlatStorage struct {
 	path string
 
 	// Logger which this storage will write to
-	logger Logger
+	logger *logrus.Logger
 }
 
 // resourceExists checks if a resource is existent.
@@ -42,5 +44,6 @@ func NewFlatStorage(path string) (*FlatStorage, error) {
 		path:    filepath.Clean(path),
 		mutex:   &sync.Mutex{},
 		mutexes: make(map[string]*sync.Mutex),
+		logger:  logrus.New(),
 	}, nil
 }
