@@ -28,13 +28,6 @@ func ExampleRead() {
 		Name string
 	}
 
-	// File: /var/db/test/test.json
-	//
-	//	{
-	//		"name": "Hello World"
-	//  }
-	//
-
 	test := Test{}
 	fs.Read("test", "test", &test)
 
