@@ -23,18 +23,18 @@ type FlatStorage struct {
 }
 
 // resourceExists checks if a resource is existent.
-func (d *FlatStorage) resourceExists(collection string, resource string) bool {
+func (fs *FlatStorage) resourceExists(collection string, resource string) bool {
 	return pathExists(filepath.Join(d.path, collection, resource))
 
 }
 
 // resourceExists checks if a collection is existent.
-func (d *FlatStorage) collectionExists(collection string) bool {
+func (fs *FlatStorage) collectionExists(collection string) bool {
 	return pathExists(filepath.Join(d.path, collection))
 }
 
 // resourceExists checks if a collection is existent.
-func (d *FlatStorage) databaseExists(collection string) bool {
+func (fs *FlatStorage) databaseExists(collection string) bool {
 	return pathExists(d.path)
 }
 
