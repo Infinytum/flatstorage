@@ -1,6 +1,7 @@
 package flatstorage
 
 import (
+	"os"
 	"path/filepath"
 	"sync"
 
@@ -32,8 +33,16 @@ func (fs *FlatStorage) collectionPath(collection string) string {
 
 // NewFlatStorage opens a flatstorage at specified path
 func NewFlatStorage(path string) (*FlatStorage, error) {
+	path = filepath.Clean(path)
 
-	// ToDo: Create DB on init
+	if !pathExists(path) {
+		err := os.MkdirAll(path, 0755)
+		if err != nil {
+			logrus.WithField("path", path).Error("Could not create database", err)
+			return nil, err
+		}
+	}
+
 	return &FlatStorage{
 		path:    filepath.Clean(path),
 		mutex:   &sync.Mutex{},
