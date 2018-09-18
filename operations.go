@@ -7,12 +7,18 @@ import (
 
 // Delete removes a single resource from a collection
 func (fs *FlatStorage) Delete(collection string, resource string) error {
-	return fmt.Errorf("Not implemented")
+	if fs.Exists(collection, resource) {
+		return fmt.Errorf("Not implemented")
+	}
+	return nil
 }
 
 // DeleteAll removes an entire collection from the filesystem
 func (fs *FlatStorage) DeleteAll(collection string) error {
-	return fmt.Errorf("Not implemented")
+	if fs.CollectionExists(collection) {
+		return fmt.Errorf("Not implemented")
+	}
+	return nil
 }
 
 // Exists checks if a resource is present in a collection
