@@ -16,12 +16,12 @@ func (fs *FlatStorage) DeleteAll(collection string) error {
 
 // Exists checks if an object is present in a collection
 func (fs *FlatStorage) Exists(collection string, objectID string) bool {
-	return fmt.Errorf("Not implemented")
+	return false
 }
 
 // CollectionExists checks if a collection exists
 func (fs *FlatStorage) CollectionExists(collection string) bool {
-	return fmt.Errorf("Not implemented")
+	return false
 }
 
 // Read reads a single object from a collection into an interface instance
