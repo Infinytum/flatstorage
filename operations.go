@@ -33,6 +33,14 @@ func (fs *FlatStorage) CollectionExists(collection string) bool {
 
 // Read reads a single resource from a collection into an interface instance
 func (fs *FlatStorage) Read(collection string, resource string, out interface{}) error {
+	if !fs.CollectionExists(collection) {
+		return collectionNotExistent(collection)
+	}
+
+	if !fs.Exists(collection, resource) {
+		return resourceNotExistent(collection, resource)
+	}
+
 	return fmt.Errorf("Not implemented")
 }
 
