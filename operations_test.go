@@ -129,3 +129,126 @@ func TestFlatStorage_DeleteAll(t *testing.T) {
 		})
 	}
 }
+
+func TestFlatStorage_Exists(t *testing.T) {
+	os.MkdirAll("/tmp/flatstorage/exist/", 0777)
+	os.Create("/tmp/flatstorage/exist/exist.json")
+	type fields struct {
+		mutex   *sync.Mutex
+		mutexes map[string]*sync.Mutex
+		path    string
+		logger  *logrus.Logger
+	}
+	type args struct {
+		collection string
+		resource   string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "Test existing resource",
+			fields: fields{
+				logger:  logrus.New(),
+				mutex:   &sync.Mutex{},
+				mutexes: make(map[string]*sync.Mutex, 0),
+				path:    "/tmp/flatstorage",
+			},
+			args: args{
+				collection: "exist",
+				resource:   "exist",
+			},
+			want: true,
+		},
+		{
+			name: "Test non-existing resource",
+			fields: fields{
+				logger:  logrus.New(),
+				mutex:   &sync.Mutex{},
+				mutexes: make(map[string]*sync.Mutex, 0),
+				path:    "/tmp/flatstorage",
+			},
+			args: args{
+				collection: "exist",
+				resource:   "nonexist",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := &FlatStorage{
+				mutex:   tt.fields.mutex,
+				mutexes: tt.fields.mutexes,
+				path:    tt.fields.path,
+				logger:  tt.fields.logger,
+			}
+			if got := fs.Exists(tt.args.collection, tt.args.resource); got != tt.want {
+				t.Errorf("FlatStorage.Exists() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestFlatStorage_CollectionExists(t *testing.T) {
+	os.MkdirAll("/tmp/flatstorage/exist_collection/", 0777)
+	type fields struct {
+		mutex   *sync.Mutex
+		mutexes map[string]*sync.Mutex
+		path    string
+		logger  *logrus.Logger
+	}
+	type args struct {
+		collection string
+	}
+	tests := []struct {
+		name   string
+		fields fields
+		args   args
+		want   bool
+	}{
+		{
+			name: "Test existing collection",
+			fields: fields{
+				logger:  logrus.New(),
+				mutex:   &sync.Mutex{},
+				mutexes: make(map[string]*sync.Mutex, 0),
+				path:    "/tmp/flatstorage",
+			},
+			args: args{
+				collection: "exist_collection",
+			},
+			want: true,
+		},
+		{
+			name: "Test non-existing collection",
+			fields: fields{
+				logger:  logrus.New(),
+				mutex:   &sync.Mutex{},
+				mutexes: make(map[string]*sync.Mutex, 0),
+				path:    "/tmp/flatstorage",
+			},
+			args: args{
+				collection: "non-exist",
+			},
+			want: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			fs := &FlatStorage{
+				mutex:   tt.fields.mutex,
+				mutexes: tt.fields.mutexes,
+				path:    tt.fields.path,
+				logger:  tt.fields.logger,
+			}
+			if got := fs.CollectionExists(tt.args.collection); got != tt.want {
+				t.Errorf("FlatStorage.CollectionExists() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+	os.RemoveAll("/tmp/flatstorage/exist_collection/")
+}
