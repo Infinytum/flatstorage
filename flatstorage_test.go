@@ -7,6 +7,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+func ExampleNewFlatStorage() {
+	fs, err := NewFlatStorage("/var/db")
+	if err != nil {
+		panic(err)
+	}
+
+	print(fs.CollectionExists("test"))
+
+	// Output: false
+}
+
 func TestFlatStorage_resourcePath(t *testing.T) {
 	type fields struct {
 		mutex   *sync.Mutex
