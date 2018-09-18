@@ -85,11 +85,14 @@ func (fs *FlatStorage) ReadAll(collection string, resourceType interface{}) ([]i
 	for _, resourceFile := range resources {
 		var clone = reflect.New(reflect.ValueOf(resourceType).Elem().Type()).Interface()
 		name := strings.TrimSuffix(resourceFile.Name(), filepath.Ext(resourceFile.Name()))
-		fs.Read(collection, name, &clone)
+		err := fs.Read(collection, name, &clone)
+		if err != nil {
+			return make([]interface{}, 0), err
+		}
 		resourceList = append(resourceList, clone)
 	}
 
-	return resourceList, fmt.Errorf("Not implemented")
+	return resourceList, nil
 }
 
 // Write writes a single object into a collection from an interface instance
