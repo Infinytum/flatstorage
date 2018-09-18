@@ -24,11 +24,16 @@ type FlatStorage struct {
 }
 
 func (fs *FlatStorage) resourcePath(collection string, resource string) string {
-	return filepath.Clean(fs.collectionPath(collection), resource)
+	path := filepath.Join(fs.collectionPath(collection), resource)
+
+	if filepath.Ext(path) != ".json" {
+		path += ".json"
+	}
+	return path
 }
 
 func (fs *FlatStorage) collectionPath(collection string) string {
-	return filepath.Clean(fs.path, collection)
+	return filepath.Join(fs.path, collection)
 }
 
 // NewFlatStorage opens a flatstorage at specified path
