@@ -24,18 +24,18 @@ type FlatStorage struct {
 
 // resourceExists checks if a resource is existent.
 func (fs *FlatStorage) resourceExists(collection string, resource string) bool {
-	return pathExists(filepath.Join(d.path, collection, resource))
+	return pathExists(filepath.Join(fs.path, collection, resource))
 
 }
 
 // resourceExists checks if a collection is existent.
 func (fs *FlatStorage) collectionExists(collection string) bool {
-	return pathExists(filepath.Join(d.path, collection))
+	return pathExists(filepath.Join(fs.path, collection))
 }
 
 // resourceExists checks if a collection is existent.
 func (fs *FlatStorage) databaseExists(collection string) bool {
-	return pathExists(d.path)
+	return pathExists(fs.path)
 }
 
 // NewFlatStorage opens a flatstorage at specified path
