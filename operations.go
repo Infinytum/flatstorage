@@ -37,7 +37,7 @@ func (fs *FlatStorage) Read(collection string, resource string, out interface{})
 }
 
 // ReadAll reads all resources from a collection into an interface array of resourceType
-func (fs *FlatStorage) ReadAll(collection string, resource string, resourceType interface{}) ([]interface{}, error) {
+func (fs *FlatStorage) ReadAll(collection string, resourceType interface{}) ([]interface{}, error) {
 	return nil, fmt.Errorf("Not implemented")
 }
 
