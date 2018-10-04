@@ -254,7 +254,7 @@ func TestFlatStorage_CollectionExists(t *testing.T) {
 }
 
 func ExampleFlatStorage_read() {
-	fs, err := NewFlatStorage("/var/db")
+	fs, err := NewFlatStorage("/tmp/db")
 	if err != nil {
 		panic(err)
 	}
@@ -282,7 +282,7 @@ func ExampleFlatStorage_read() {
 }
 
 func ExampleFlatStorage_write() {
-	fs, err := NewFlatStorage("/var/db")
+	fs, err := NewFlatStorage("/tmp/db")
 	if err != nil {
 		panic(err)
 	}
@@ -303,7 +303,7 @@ func ExampleFlatStorage_write() {
 }
 
 func ExampleFlatStorage_delete() {
-	fs, err := NewFlatStorage("/var/db")
+	fs, err := NewFlatStorage("/tmp/db")
 	if err != nil {
 		panic(err)
 	}
@@ -316,7 +316,7 @@ func ExampleFlatStorage_delete() {
 }
 
 func ExampleFlatStorage_deleteall() {
-	fs, err := NewFlatStorage("/var/db")
+	fs, err := NewFlatStorage("/tmp/db")
 	if err != nil {
 		panic(err)
 	}
@@ -329,7 +329,7 @@ func ExampleFlatStorage_deleteall() {
 }
 
 func ExampleFlatStorage_readall() {
-	fs, err := NewFlatStorage("/var/db")
+	fs, err := NewFlatStorage("/tmp/db")
 	if err != nil {
 		panic(err)
 	}
