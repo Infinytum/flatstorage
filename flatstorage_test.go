@@ -8,7 +8,7 @@ import (
 )
 
 func ExampleNewFlatStorage() {
-	fs, err := NewFlatStorage("/var/db")
+	fs, err := NewFlatStorage("/tmp/db")
 	if err != nil {
 		panic(err)
 	}
