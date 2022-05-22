@@ -48,7 +48,7 @@ func (r *GenericRepository[T]) GetAll() (val []T, err error) {
 	err = err2
 	if err2 == nil {
 		for _, v := range values {
-			val = append(val, v.(T))
+			val = append(val, *v.(*T))
 		}
 	}
 	return
