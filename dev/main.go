@@ -1,15 +1,14 @@
-package flatstorage
+package main
 
 import (
 	"fmt"
-	"os"
+	"net/http"
 	"reflect"
 	"strings"
 )
 
-func pathExists(path string) bool {
-	_, err := os.Stat(path)
-	return !os.IsNotExist(err)
+func main() {
+	fmt.Println(reflectTypeKey(reflect.TypeOf(http.Request{})))
 }
 
 func reflectTypeKey(t reflect.Type) string {
