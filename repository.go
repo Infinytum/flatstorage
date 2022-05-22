@@ -44,7 +44,7 @@ func (r *GenericRepository[T]) Get(resourceId string) (val *T, err error) {
 }
 
 func (r *GenericRepository[T]) GetAll() (val []T, err error) {
-	values, err2 := r.ReadAll(r.Collection(), reflect.New(r.Type()))
+	values, err2 := r.ReadAll(r.Collection(), reflect.New(r.Type()).Interface())
 	err = err2
 	if err2 == nil {
 		for _, v := range values {
