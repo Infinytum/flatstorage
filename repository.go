@@ -39,7 +39,7 @@ func (r *GenericRepository[T]) Exists(resourceId string) bool {
 }
 
 func (r *GenericRepository[T]) Get(resourceId string) (val *T, err error) {
-	err = r.Read(r.Collection(), resourceId, val)
+	err = r.Read(r.Collection(), resourceId, &val)
 	return
 }
 
