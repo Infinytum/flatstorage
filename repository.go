@@ -7,10 +7,11 @@ import (
 
 type GenericRepository[T any] struct {
 	*FlatStorage
+	collection string
 }
 
 func (r *GenericRepository[T]) Collection() string {
-	return reflectTypeKey(r.Type())
+	return r.collection
 }
 
 func (r *GenericRepository[T]) Count() int {
@@ -62,5 +63,13 @@ func (r *GenericRepository[T]) Write(resourceId string, val T) error {
 }
 
 func Repository[T any](fs *FlatStorage) *GenericRepository[T] {
-	return &GenericRepository[T]{fs}
+	repo := &GenericRepository[T]{
+		FlatStorage: fs,
+	}
+	repo.collection = reflectTypeKey(repo.Type())
+	return repo
+}
+
+func NamedRepository[T any](fs *FlatStorage, collection string) *GenericRepository[T] {
+	return &GenericRepository[T]{collection: collection, FlatStorage: fs}
 }
